@@ -63,35 +63,50 @@ require("lazy").setup({
 	            vim.o.termguicolors=true
             end
         },
+        -- LSPの設定
         {
             "neovim/nvim-lspconfig",
-            "williamboman/mason.nvim",
-            "williamboman/mason-lspconfig.nvim",
-            "zapling/mason-conform.nvim",
-            'stevearc/conform.nvim',
             config = function()
-                require("lspconfig").rust_analyzer.setup({
-                    settings = {
-                        ['rust-analyzer'] = {},
-                    },
-                })
+                -- 使用するLSPサーバーを設定
+                require('lspconfig').lua_ls.setup {}
+                -- 必要に応じて他のLSPサーバーも追加
+            end,
+        },
+        -- MasonでLSPとフォーマッタの管理
+        {
+            "williamboman/mason.nvim",
+            config = function()
                 require("mason").setup()
-                require("mason-lspconfig").setup()
+            end,
+        },
+        {
+            "williamboman/mason-lspconfig.nvim",
+            config = function()
+                require("mason-lspconfig").setup({
+                    ensure_installed = { "lua_ls"}, -- 必要なLSPサーバーを指定
+                })
+            end,
+        },
+        {
+            "zapling/mason-conform.nvim",
+            dependencies = { "mason.nvim" },
+            config = function()
+                require("mason-conform").setup({
+                    ensure_installed = { "stylua", "prettier" }, -- 必要なフォーマッタを指定
+                })
+            end,
+        },
+        -- Conformの設定（フォーマッタ管理）
+        {
+            "stevearc/conform.nvim",
+            config = function()
                 require("conform").setup({
                     formatters_by_ft = {
                         lua = { "stylua" },
-                        -- Conform will run multiple formatters sequentially
-                        python = { "isort", "black" },
-                        -- You can customize some of the format options for the filetype (:help conform.format)
-                        rust = { "rustfmt", lsp_format = "fallback" },
-                        -- Conform will run the first available formatter
-                        javascript = { "prettierd", "prettier", stop_after_first = true },
-  		            },
+                        javascript = { "prettier" },
+                    },
                 })
-                require("mason-conform").setup({
-                    ignore_install = {"prettier"}
-                })
-            end
+            end,
         },
         {
             "folke/trouble.nvim",
