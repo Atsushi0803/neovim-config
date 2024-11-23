@@ -24,11 +24,24 @@ vim.g.maplocalleader = "\\"
 -- Setup lazy.nvim
 require("lazy").setup({
     spec = {
-        -- import your plugins
+        -- {
+        --     "ivechan/gtags.vim",
+        -- },
+        -- {
+        --     "ivechan/telescope-gtags",
+        -- },
+        {
+            "gtags.vim",
+            dir = "~/.config/nvim/lua/plugins", -- プラグインが配置されているディレクトリを指定
+            config = function()
+                vim.cmd("runtime lua/plugins/gtags.vim")
+                -- vim.cmd("runtime lua/plugins/gtags-cscope.vim") -- nvimからcscope対応が外されたためNOP化
+            end,
+        },
         {
             "nvim-treesitter/nvim-treesitter",
             build = ":TSUpdate",
-            config = function () 
+            config = function ()
                 local configs = require("nvim-treesitter")
                 configs.setup({
                     ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "elixir", "heex", "javascript", "html" },
