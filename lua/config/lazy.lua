@@ -82,7 +82,7 @@ require("lazy").setup({
             config = function()
                 -- 使用するLSPサーバーを設定
                 require('lspconfig').lua_ls.setup {}
-                -- 必要に応じて他のLSPサーバーも追加
+                require('lspconfig').clangd.setup {}
             end,
         },
         -- MasonでLSPとフォーマッタの管理
